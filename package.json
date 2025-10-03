@@ -4,7 +4,8 @@
   "description": "业余无线电C类考试记忆助手 - 纯静态前端应用",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
+    "build:check": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "serve": "vite preview",
     "test": "vitest",

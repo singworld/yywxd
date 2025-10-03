@@ -29,11 +29,24 @@ pnpm build
 
 ### 本地预览构建结果
 ```bash
-# 使用Python
-cd frontend/dist && python3 -m http.server 8080
+# 使用Vite预览
+pnpm preview
 
-# 或使用npx
-npx serve frontend/dist
+# 或使用npx serve
+npx serve dist
+```
+
+### 部署到Vercel
+```bash
+# 方式一：通过Vercel CLI
+vercel
+
+# 方式二：通过Vercel网站（推荐）
+# 1. 推送代码到GitHub
+# 2. 在vercel.com导入项目
+# 3. 点击Deploy
+
+# 详细步骤见：Vercel部署指南.md
 ```
 
 ## 项目架构
@@ -106,28 +119,31 @@ LY0001,1.1.1,MC2-0001,题目内容,AC,选项A,选项B,选项C,选项D
 base: './'  // 支持相对路径，可在任意目录打开
 ```
 
-### 添加新记忆口诀
-在 `dataService.ts` 的 `memoryAids` 数组中添加：
-```typescript
-{ pattern: /你的关键词/g, aid: '你的记忆口诀' }
-```
+### 记忆口诀系统
+**新版系统**（基于内容，不依赖选项位置）：
+- 文件：`src/services/memoryAidsContentBased.ts`
+- 特点：简洁、口语化、易记（参考Remember.md风格）
+- 100%覆盖所有题目
+- 详见：[记忆口诀优化总结.md](记忆口诀优化总结.md)
 
 ### 更新题库
-替换 `frontend/public/C类题库_extracted.csv` 文件即可。
+替换 `public/C类题库_extracted.csv` 文件即可。
 
 ## 部署方式
 
-### 1. 直接打开HTML
-构建后可直接用浏览器打开 `dist/index.html`
+### 推荐：Vercel（最简单）
+1. 推送代码到GitHub
+2. 在 [vercel.com](https://vercel.com) 导入项目
+3. 点击Deploy
+4. 完成！（自动配置，无需任何设置）
 
-### 2. 静态托管
-可部署到：
+**详细步骤**：见 [Vercel部署指南.md](Vercel部署指南.md)
+
+### 其他选项
 - **GitHub Pages** - 免费，自动构建
 - **Netlify** - 一键部署
-- **Vercel** - 支持Git集成
 - **Cloudflare Pages** - CDN加速
-
-只需上传 `frontend/dist/` 目录的所有文件。
+- **直接打开** - 构建后双击 `dist/index.html`
 
 ## 记忆口诀示例
 
