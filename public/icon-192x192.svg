@@ -1,0 +1,6 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" fill="#1976d2" rx="12"/>
+  <circle cx="96" cy="70" r="25" fill="white" opacity="0.9"/>
+  <text x="96" y="130" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="bold">业余</text>
+  <text x="96" y="155" font-family="Arial, sans-serif" font-size="20" fill="white" text-anchor="middle" font-weight="bold">无线电</text>
+</svg>
