@@ -15,19 +15,6 @@ interface TestCase {
   memoryAid: string
 }
 
-const categoryNames: Record<string, string> = {
-  '1': '无线电管理法规',
-  '2': '无线电技术基础',
-  '3': '发射机和接收机',
-  '4': '天线和馈线',
-  '5': '安全防护'
-}
-
-function getCategoryFromP(p: string): string {
-  const parts = p.split('.')
-  return parts[0] || '1'
-}
-
 async function testContentBasedMemoryAids() {
   console.log('='.repeat(70))
   console.log('基于内容的记忆口诀系统测试')
@@ -55,7 +42,7 @@ async function testContentBasedMemoryAids() {
               D: row.D
             }
 
-            const correctAnswerTexts = correctAnswers.map(ans => optionTexts[ans])
+            const correctAnswerTexts = correctAnswers.map((ans: string) => optionTexts[ans])
             const memoryAid = generateMemoryAid(row.Q, correctAnswerTexts)
 
             testCases.push({

@@ -96,17 +96,18 @@
     </div>
 
     <div class="text-center q-mt-lg">
-      <q-btn flat @click="$router.push('/categories')" icon="arrow_back" label="返回分类" />
+      <q-btn flat @click="goBackToCategories" icon="arrow_back" label="返回分类" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getQuestionsByCategory } from '../services/dataService'
 
 const route = useRoute()
+const router = useRouter()
 
 interface Question {
   id: string
@@ -209,4 +210,8 @@ function showAnswer() {
 onMounted(() => {
   loadQuestions()
 })
+
+function goBackToCategories() {
+  router.push('/categories')
+}
 </script>

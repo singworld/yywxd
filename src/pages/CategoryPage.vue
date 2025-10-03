@@ -51,7 +51,7 @@
     </div>
 
     <div class="text-center q-mt-lg">
-      <q-btn flat @click="$router.push('/')" icon="arrow_back" label="返回首页" />
+      <q-btn flat @click="goHome" icon="arrow_back" label="返回首页" />
     </div>
   </div>
 </template>
@@ -95,6 +95,10 @@ async function loadCategories() {
 
 function openCategory(categoryId: string) {
   router.push(`/study/${categoryId}`)
+}
+
+function goHome() {
+  router.push('/')
 }
 
 onMounted(() => {

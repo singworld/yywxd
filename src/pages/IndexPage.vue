@@ -46,7 +46,7 @@
               size="lg"
               label="开始学习"
               icon="school"
-              @click="$router.push('/categories')"
+              @click="goToCategories"
             />
           </q-card-actions>
         </q-card>
@@ -98,9 +98,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
+const router = useRouter()
 
 import { loadQuestions, getAllMemoryAids } from '../services/dataService'
 
@@ -126,5 +128,9 @@ async function testAPI() {
       icon: 'error'
     })
   }
+}
+
+function goToCategories() {
+  router.push('/categories')
 }
 </script>

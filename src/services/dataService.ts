@@ -74,7 +74,7 @@ export async function loadQuestions(): Promise<Question[]> {
                 D: row.D
               }
 
-              const correctAnswerTexts = correctAnswers.map(ans => optionTexts[ans])
+              const correctAnswerTexts = correctAnswers.map((ans: string) => optionTexts[ans])
 
               const question: Question = {
                 id: row.J || `Q_${questions.length + 1}`,
