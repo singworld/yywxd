@@ -11,15 +11,27 @@
       <q-card-section>
         <div class="text-h6 q-mb-md">
           题目 {{ currentIndex + 1 }} / {{ totalQuestions }}
+          <q-chip v-if="isMultipleChoice" color="orange" text-color="white" size="sm">
+            多选题
+          </q-chip>
         </div>
 
         <div class="text-body1 q-mb-md" v-html="currentQuestion.content"></div>
 
         <q-option-group
+          v-if="!isMultipleChoice"
           v-model="selectedAnswer"
           :options="currentQuestion.options"
           color="primary"
           type="radio"
+        />
+
+        <q-option-group
+          v-else
+          v-model="selectedAnswers"
+          :options="currentQuestion.options"
+          color="primary"
+          type="checkbox"
         />
       </q-card-section>
 
@@ -58,12 +70,15 @@
             @click="showAnswer"
             :disable="answerShown"
           />
-          <q-btn
+          <q-chip
             v-if="answerShown"
             :color="isCorrect ? 'green' : 'red'"
-            :label="isCorrect ? '正确' : '错误'"
-            :icon="isCorrect ? 'check' : 'close'"
-          />
+            text-color="white"
+            size="md"
+            icon="info"
+          >
+            正确答案: {{ displayAnswer }}
+          </q-chip>
         </div>
       </q-card-actions>
 
@@ -105,6 +120,7 @@ interface Question {
 
 const currentIndex = ref(0)
 const selectedAnswer = ref('')
+const selectedAnswers = ref<string[]>([])
 const answerShown = ref(false)
 const questions = ref<Question[]>([])
 const loading = ref(true)
@@ -130,10 +146,30 @@ const memoryAid = computed(() => {
   return currentQuestion.value?.memoryAid || ''
 })
 
+const isMultipleChoice = computed(() => {
+  const correctAnswer = currentQuestion.value?.correctAnswer || ''
+  return correctAnswer.length > 1
+})
+
 const isCorrect = computed(() => {
-  const correctAnswers = currentQuestion.value?.correctAnswer || ''
-  // 支持多选题，检查用户选择的答案是否在正确答案中
-  return correctAnswers.includes(selectedAnswer.value)
+  const correctAnswer = currentQuestion.value?.correctAnswer || ''
+
+  if (isMultipleChoice.value) {
+    // 多选题：用户选择的答案必须和正确答案完全一致
+    const userAnswer = selectedAnswers.value.sort().join('')
+    return userAnswer === correctAnswer.split('').sort().join('')
+  } else {
+    // 单选题
+    return selectedAnswer.value === correctAnswer
+  }
+})
+
+const displayAnswer = computed(() => {
+  const correctAnswer = currentQuestion.value?.correctAnswer || ''
+  if (correctAnswer.length > 1) {
+    return correctAnswer.split('').join('、')
+  }
+  return correctAnswer
 })
 
 async function loadQuestions() {
@@ -152,6 +188,7 @@ function nextQuestion() {
   if (currentIndex.value < totalQuestions.value - 1) {
     currentIndex.value++
     selectedAnswer.value = ''
+    selectedAnswers.value = []
     answerShown.value = false
   }
 }
@@ -160,6 +197,7 @@ function previousQuestion() {
   if (currentIndex.value > 0) {
     currentIndex.value--
     selectedAnswer.value = ''
+    selectedAnswers.value = []
     answerShown.value = false
   }
 }
