@@ -77,7 +77,7 @@ export async function loadQuestions(): Promise<Question[]> {
               const correctAnswerTexts = correctAnswers.map((ans: string) => optionTexts[ans])
 
               const question: Question = {
-                id: row.J || `Q_${questions.length + 1}`,
+                id: row.I || `Q_${questions.length + 1}`,  // 统一使用 I 列（内部ID）
                 content: row.Q,
                 options: [
                   { label: `A. ${row.A}`, value: 'A' },
@@ -88,8 +88,8 @@ export async function loadQuestions(): Promise<Question[]> {
                 correctAnswer: correctAnswers.join(''), // 多选题会返回如 "AB"
                 category,
                 categoryName: categoryNames[category] || '未知分类',
-                // 使用题号直接匹配记忆口诀
-                memoryAid: getMemoryAidByQuestionId(row.J || '')
+                // 统一使用 I 列匹配记忆口诀
+                memoryAid: getMemoryAidByQuestionId(row.I || '')
               }
               questions.push(question)
             }
