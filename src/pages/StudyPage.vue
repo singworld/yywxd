@@ -11,6 +11,9 @@
       <q-card-section>
         <div class="text-h6 q-mb-md">
           题目 {{ currentIndex + 1 }} / {{ totalQuestions }}
+          <q-chip color="blue-grey" text-color="white" size="sm" class="q-ml-sm">
+            {{ currentQuestion.id }}
+          </q-chip>
           <q-chip v-if="isMultipleChoice" color="orange" text-color="white" size="sm">
             多选题
           </q-chip>

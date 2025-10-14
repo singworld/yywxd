@@ -1,5 +1,5 @@
 import Papa from 'papaparse'
-import { generateMemoryAid } from './memoryAidsContentBased'
+import { getMemoryAidByQuestionId } from './memoryAidsByQuestionId'
 
 export interface Question {
   id: string
@@ -88,8 +88,8 @@ export async function loadQuestions(): Promise<Question[]> {
                 correctAnswer: correctAnswers.join(''), // 多选题会返回如 "AB"
                 category,
                 categoryName: categoryNames[category] || '未知分类',
-                // 使用基于内容的记忆口诀系统：传入题目和正确答案的实际文字
-                memoryAid: generateMemoryAid(row.Q, correctAnswerTexts)
+                // 使用题号直接匹配记忆口诀
+                memoryAid: getMemoryAidByQuestionId(row.J || '')
               }
               questions.push(question)
             }
