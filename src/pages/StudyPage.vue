@@ -9,14 +9,50 @@
 
     <q-card v-else-if="currentQuestion">
       <q-card-section>
-        <div class="text-h6 q-mb-md">
-          题目 {{ currentIndex + 1 }} / {{ totalQuestions }}
-          <q-chip color="blue-grey" text-color="white" size="sm" class="q-ml-sm">
-            {{ currentQuestion.id }}
-          </q-chip>
-          <q-chip v-if="isMultipleChoice" color="orange" text-color="white" size="sm">
-            多选题
-          </q-chip>
+        <!-- 移动端：垂直布局，PC端：水平布局 -->
+        <div class="column q-gutter-sm q-mb-md">
+          <!-- 题目信息行 -->
+          <div class="row items-center justify-between">
+            <div class="text-h6">
+              题目 {{ currentIndex + 1 }} / {{ totalQuestions }}
+            </div>
+            <div class="row q-gutter-xs">
+              <q-chip color="blue-grey" text-color="white" size="sm">
+                {{ currentQuestion.id }}
+              </q-chip>
+              <q-chip v-if="isMultipleChoice" color="orange" text-color="white" size="sm">
+                多选
+              </q-chip>
+            </div>
+          </div>
+
+          <!-- 跳转输入行 -->
+          <div class="row items-center q-gutter-sm">
+            <span class="text-caption text-grey-7">跳转：</span>
+            <q-input
+              v-model.number="jumpToNumber"
+              type="number"
+              dense
+              outlined
+              placeholder="输入题号"
+              class="col-grow"
+              style="max-width: 150px"
+              :min="1"
+              :max="totalQuestions"
+              @keyup.enter="jumpToQuestion"
+            >
+              <template v-slot:append>
+                <q-btn
+                  flat
+                  dense
+                  icon="arrow_forward"
+                  color="primary"
+                  @click="jumpToQuestion"
+                  :disable="!isValidJumpNumber"
+                />
+              </template>
+            </q-input>
+          </div>
         </div>
 
         <div class="text-body1 q-mb-md" v-html="currentQuestion.content"></div>
@@ -47,42 +83,58 @@
         </q-banner>
       </q-card-section>
 
-      <q-card-actions align="between">
-        <div>
+      <q-card-actions class="column q-gutter-sm q-pa-md">
+        <!-- 导航按钮行 -->
+        <div class="row justify-between full-width">
           <q-btn
-            flat
-            label="上一题"
+            unelevated
+            color="grey-7"
             icon="navigate_before"
+            label="上一题"
             :disable="currentIndex === 0"
             @click="previousQuestion"
+            class="col"
           />
           <q-btn
-            flat
+            unelevated
+            color="grey-7"
+            icon-right="navigate_next"
             label="下一题"
-            icon="navigate_next"
             :disable="currentIndex === totalQuestions - 1"
             @click="nextQuestion"
+            class="col q-ml-sm"
           />
         </div>
 
-        <div>
-          <q-btn
-            color="primary"
-            label="显示答案"
-            icon="visibility"
-            @click="showAnswer"
-            :disable="answerShown"
-          />
-          <q-chip
-            v-if="answerShown"
-            :color="isCorrect ? 'green' : 'red'"
-            text-color="white"
-            size="md"
-            icon="info"
-          >
+        <!-- 显示答案按钮 -->
+        <q-btn
+          unelevated
+          color="primary"
+          icon="visibility"
+          label="显示答案"
+          @click="showAnswer"
+          :disable="answerShown"
+          class="full-width"
+          size="md"
+        />
+
+        <!-- 答案显示 -->
+        <q-banner
+          v-if="answerShown"
+          :class="isCorrect ? 'bg-green-1' : 'bg-red-1'"
+          class="text-center"
+        >
+          <template v-slot:avatar>
+            <q-icon
+              :name="isCorrect ? 'check_circle' : 'cancel'"
+              :color="isCorrect ? 'green' : 'red'"
+              size="md"
+            />
+          </template>
+          <div class="text-weight-bold">
             正确答案: {{ displayAnswer }}
-          </q-chip>
-        </div>
+          </div>
+        </q-banner>
       </q-card-actions>
 
       <q-linear-progress
@@ -105,7 +157,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getQuestionsByCategory } from '../services/dataService'
 
@@ -128,6 +180,46 @@ const selectedAnswers = ref<string[]>([])
 const answerShown = ref(false)
 const questions = ref<Question[]>([])
 const loading = ref(true)
+const jumpToNumber = ref<number | null>(null)
+
+// localStorage key
+const getStorageKey = () => {
+  const categoryId = route.params.category as string
+  return `study-progress-${categoryId}`
+}
+
+// 保存当前进度到 localStorage
+const saveProgress = () => {
+  const key = getStorageKey()
+  const progress = {
+    currentIndex: currentIndex.value,
+    timestamp: Date.now()
+  }
+  localStorage.setItem(key, JSON.stringify(progress))
+}
+
+// 从 localStorage 恢复进度
+const loadProgress = () => {
+  const key = getStorageKey()
+  const saved = localStorage.getItem(key)
+  if (saved) {
+    try {
+      const progress = JSON.parse(saved)
+      // 只恢复24小时内的进度
+      if (Date.now() - progress.timestamp < 24 * 60 * 60 * 1000) {
+        currentIndex.value = progress.currentIndex
+        console.log(`✅ 恢复进度：第 ${currentIndex.value + 1} 题`)
+      }
+    } catch (e) {
+      console.error('恢复进度失败:', e)
+    }
+  }
+}
+
+// 监听 currentIndex 变化，自动保存
+watch(currentIndex, () => {
+  saveProgress()
+})
 
 const categoryName = computed(() => {
   const categoryId = route.params.category as string
@@ -176,11 +268,20 @@ const displayAnswer = computed(() => {
   return correctAnswer
 })
 
+const isValidJumpNumber = computed(() => {
+  return jumpToNumber.value !== null &&
+    jumpToNumber.value >= 1 &&
+    jumpToNumber.value <= totalQuestions.value
+})
+
 async function loadQuestions() {
   try {
     const categoryId = route.params.category as string
     questions.value = await getQuestionsByCategory(categoryId)
     console.log(`✅ 加载了 ${questions.value.length} 道题目 (分类: ${categoryId})`)
+
+    // 加载完题目后恢复进度
+    loadProgress()
   } catch (error) {
     console.error('❌ 加载题目失败:', error)
   } finally {
@@ -208,6 +309,16 @@ function previousQuestion() {
 
 function showAnswer() {
   answerShown.value = true
+}
+
+function jumpToQuestion() {
+  if (isValidJumpNumber.value && jumpToNumber.value !== null) {
+    currentIndex.value = jumpToNumber.value - 1
+    selectedAnswer.value = ''
+    selectedAnswers.value = []
+    answerShown.value = false
+    jumpToNumber.value = null
+  }
 }
 
 onMounted(() => {
