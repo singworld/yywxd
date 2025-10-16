@@ -59,6 +59,8 @@ export const category2MemoryAids: Record<string, string> = {
   // QSL与中继台规范 (MC1-0276至MC1-0289)
   'MC1-0276': '【QSL填写】需回卡直邮+SASE，不用涂改液，QTH填发射地址',
   'MC1-0277': '【SWL】短波收听者只寄收听卡（无发射执照）',
+  'MC4-0276': '【QSL卡多重意义】确认联络+掌握设备+申请奖状+收集欣赏，全选ABCD（四大作用缺一不可）',
+  'MC4-0277': '【QSL卡必备内容】双方呼号+信号报告时间+方式频率+签章地址，全选ABCD（六要素全包）',
   'MC1-0278': '【中继频差】V段(144)溜溜溜(0.6MHz)，U段(430)我(5MHz)最猛',
   'MC1-0279': '【中继呼叫】呼对方呼号+报自己呼号（不呼CQ不说break）',
   'MC1-0280': '【中继原则】简短联络保持空闲，备用紧急呼叫',
@@ -302,6 +304,7 @@ export const category2MemoryAids: Record<string, string> = {
   // 【增益单位】dBi全向基准/dBd偶极基准，dBd比dBi大2.15
   'MC2-0449': 'dBi=相对点源增益（i=isotropic全向点，理论基准）',
   'MC2-0450': 'dBd=相对偶极增益（d=dipole半波偶极，实际基准）',
+  'MC4-0449': '【调幅信号细分】AM普通有载波+CW键控、DSB抑载双边、SSB抑载单边、VSB残留边带，全选ABCD（四兄弟：全双单残）',
 
   // 2.2.4 设备缩语 (MC2-0451 至 MC2-0475)
   // 【电台类型】XCVR收发一体/HT手持/MOBILE车载/BASE基地/RPT中继
@@ -380,6 +383,10 @@ export const category2MemoryAids: Record<string, string> = {
   // 【数据通信】APRS定位/PACKET分组
   'MC2-0499': 'APRS=Auto Packet位置报告（地图显示，实时追踪）',
   'MC2-0500': 'PACKET=分组无线电（数据打包，AX.25协议）',
+  'MC4-0480': '【数据方式通信】RTTY电传+无线局域网+FT8数字+5G移动，全选ABCD（传统到现代都是数据）',
+  'MC4-0511': '【FT8/JT65设置】避免过载失真+接收解码不失真+CAT控制PTT+日志软件备好，全选ABCD（四要素：双不失真+双自动）',
+  'MC4-0513': '【D-STAR特点】广泛采用+中继扩展+互联网热点+GPS定位，全选ABCD（ICOM四大功能全包）',
+  'MC4-0515': '【DATV调制DVB-S2】QPSK+8PSK+16APSK+32APSK，全选ABCD（四种PSK调制：4/8/16/32阶梯）',
 
   // 2.3.1 通信礼仪与规则 (MC2-0501 至 MC2-0530)
   // 【通联礼仪七字诀】先听后发守规矩，真实报告显素质
