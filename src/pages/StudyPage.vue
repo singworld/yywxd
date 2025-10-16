@@ -79,7 +79,24 @@
           <template v-slot:avatar>
             <q-icon name="psychology" color="primary" />
           </template>
-          <strong>记忆口诀：</strong> {{ memoryAid }}
+          <div class="row items-center justify-between">
+            <div class="col">
+              <strong>记忆口诀：</strong> {{ memoryAid }}
+            </div>
+            <!-- 特殊题目：显示详情按钮 -->
+            <q-btn
+              v-if="hasMemoryCard"
+              flat
+              dense
+              round
+              icon="info"
+              color="primary"
+              @click="showMemoryCardDialog = true"
+              size="sm"
+            >
+              <q-tooltip>查看完整记忆卡片</q-tooltip>
+            </q-btn>
+          </div>
         </q-banner>
       </q-card-section>
 
@@ -153,6 +170,244 @@
     <div class="text-center q-mt-lg">
       <q-btn flat @click="goBackToCategories" icon="arrow_back" label="返回分类" />
     </div>
+
+    <!-- ITU频段分类记忆卡片弹窗 -->
+    <q-dialog v-model="showMemoryCardDialog" maximized>
+      <q-card class="bg-grey-1">
+        <!-- 顶部工具栏 -->
+        <q-toolbar class="bg-primary text-white">
+          <q-toolbar-title>
+            <q-icon name="stars" class="q-mr-sm" />
+            ITU频段分类速记卡
+          </q-toolbar-title>
+          <q-btn flat round dense icon="close" @click="showMemoryCardDialog = false" />
+        </q-toolbar>
+
+        <!-- 卡片内容 -->
+        <q-card-section class="q-pa-md">
+          <!-- 核心口诀 -->
+          <q-card class="q-mb-md bg-orange-1">
+            <q-card-section>
+              <div class="text-h6 text-primary q-mb-sm">
+                <q-icon name="school" /> 核心口诀（30秒记住！）
+              </div>
+              <div class="text-body1 text-weight-bold q-mb-xs">
+                "老马很威武，是恶霸" + "3和30交替跳"
+              </div>
+            </q-card-section>
+          </q-card>
+
+          <!-- 速查表 -->
+          <q-card class="q-mb-md">
+            <q-card-section>
+              <div class="text-h6 text-primary q-mb-sm">
+                <q-icon name="table_chart" /> 速查表
+              </div>
+              <q-markup-table flat dense class="bg-white">
+                <thead>
+                  <tr>
+                    <th>缩写</th>
+                    <th>频率范围</th>
+                    <th>中文</th>
+                    <th>波长</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="text-weight-bold text-primary">LF</td>
+                    <td>30-300 kHz</td>
+                    <td>低频</td>
+                    <td>长波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">MF</td>
+                    <td>0.3-3 MHz</td>
+                    <td>中频</td>
+                    <td>中波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">HF</td>
+                    <td>3-30 MHz</td>
+                    <td>高频</td>
+                    <td>短波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">VHF</td>
+                    <td>30-300 MHz</td>
+                    <td>甚高频</td>
+                    <td>米波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">UHF</td>
+                    <td>0.3-3 GHz</td>
+                    <td>特高频</td>
+                    <td>分米波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">SHF</td>
+                    <td>3-30 GHz</td>
+                    <td>超高频</td>
+                    <td>厘米波</td>
+                  </tr>
+                  <tr>
+                    <td class="text-weight-bold text-primary">EHF</td>
+                    <td>30-300 GHz</td>
+                    <td>极高频</td>
+                    <td>毫米波</td>
+                  </tr>
+                </tbody>
+              </q-markup-table>
+            </q-card-section>
+          </q-card>
+
+          <!-- 三步答题法 -->
+          <q-card class="q-mb-md bg-blue-1">
+            <q-card-section>
+              <div class="text-h6 text-primary q-mb-sm">
+                <q-icon name="format_list_numbered" /> 三步答题法
+              </div>
+              <q-list dense>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar color="primary" text-color="white" size="sm">1</q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label><strong>看单位：</strong>kHz → LF/MF，MHz → HF/VHF/UHF，GHz → SHF/EHF</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar color="primary" text-color="white" size="sm">2</q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label><strong>看范围：</strong>0.3-3 / 3-30 / 30-300</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-avatar color="primary" text-color="white" size="sm">3</q-avatar>
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label><strong>选答案：</strong>对照速查表</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+
+          <!-- 记忆技巧 -->
+          <q-card class="q-mb-md">
+            <q-card-section>
+              <div class="text-h6 text-primary q-mb-sm">
+                <q-icon name="lightbulb" /> 记忆技巧
+              </div>
+              <q-list dense>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon name="filter_1" color="orange" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label caption class="text-grey-7">首字母联想</q-item-label>
+                    <q-item-label>"老马很威武，是恶霸" = L/M/H/V/U/S/E</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon name="filter_2" color="orange" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label caption class="text-grey-7">边界规律</q-item-label>
+                    <q-item-label>只记两个数：<strong>3</strong> 和 <strong>30</strong>，每级×10倍</q-item-label>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section avatar>
+                    <q-icon name="filter_3" color="orange" />
+                  </q-item-section>
+                  <q-item-section>
+                    <q-item-label caption class="text-grey-7">单位口诀</q-item-label>
+                    <q-item-label>"千兆吉，二三二" = kHz(2个) / MHz(3个) / GHz(2个)</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+
+          <!-- 易混辨析 -->
+          <q-card class="q-mb-md bg-red-1">
+            <q-card-section>
+              <div class="text-h6 text-red-8 q-mb-sm">
+                <q-icon name="warning" /> 常考陷阱
+              </div>
+              <q-banner class="bg-white q-mb-sm">
+                <template v-slot:avatar>
+                  <q-icon name="error" color="red" />
+                </template>
+                <div class="text-weight-bold">Ultra vs Super（最容易混！）</div>
+                <div class="q-mt-xs">
+                  • <strong>Ultra</strong>(特高) = UHF = 300MHz起 = WiFi<br>
+                  • <strong>Super</strong>(超高) = SHF = 3GHz起 = 卫星
+                </div>
+                <div class="q-mt-xs text-caption text-grey-7">
+                  记忆：Ultra字母U在S前 → 频率更低
+                </div>
+              </q-banner>
+            </q-card-section>
+          </q-card>
+
+          <!-- 实战示例 -->
+          <q-card class="q-mb-md">
+            <q-card-section>
+              <div class="text-h6 text-primary q-mb-sm">
+                <q-icon name="quiz" /> 实战速记
+              </div>
+              <q-list dense separator>
+                <q-item>
+                  <q-item-section>
+                    <q-item-label caption>题目</q-item-label>
+                    <q-item-label>135 kHz</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-chip color="green" text-color="white" dense>LF 低频</q-chip>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-item-label caption>题目</q-item-label>
+                    <q-item-label>28 MHz</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-chip color="green" text-color="white" dense>HF 高频</q-chip>
+                  </q-item-section>
+                </q-item>
+                <q-item>
+                  <q-item-section>
+                    <q-item-label caption>题目</q-item-label>
+                    <q-item-label>2.3 GHz</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-chip color="green" text-color="white" dense>UHF 特高频</q-chip>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+
+        </q-card-section>
+
+        <!-- 底部按钮 -->
+        <q-card-actions align="center" class="q-pb-md">
+          <q-btn
+            unelevated
+            color="primary"
+            label="我记住了"
+            icon="check_circle"
+            @click="showMemoryCardDialog = false"
+            padding="sm lg"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -181,6 +436,14 @@ const answerShown = ref(false)
 const questions = ref<Question[]>([])
 const loading = ref(true)
 const jumpToNumber = ref<number | null>(null)
+const showMemoryCardDialog = ref(false)
+
+// 判断当前题目是否有记忆卡片（MC1-0215 到 MC1-0231）
+const hasMemoryCard = computed(() => {
+  const questionId = currentQuestion.value?.id || ''
+  // MC1-0215 是频段分类的第一题，后面16题也适用
+  return questionId.match(/MC1-02(1[5-9]|2[0-9]|3[01])/)
+})
 
 // localStorage key
 const getStorageKey = () => {
