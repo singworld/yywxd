@@ -90,7 +90,14 @@ pnpm preview
 │   │   └── StudyPage.vue   # 学习页
 │   ├── services/           # 核心服务
 │   │   ├── dataService.ts  # 数据加载
-│   │   └── memoryAidsContentBased.ts # 记忆口诀系统
+│   │   ├── memoryAidsByQuestionId.ts # 记忆口诀查询接口
+│   │   └── memoryAids/     # 记忆口诀系统（1282条完整口诀）
+│   │       ├── index.ts    # 汇总导出
+│   │       ├── category1.ts # 第1类：无线电管理法规 (181条)
+│   │       ├── category2.ts # 第2类：无线电技术基础 (325条)
+│   │       ├── category3.ts # 第3类：发射机和接收机 (324条)
+│   │       ├── category4.ts # 第4类：天线和馈线 (421条)
+│   │       └── category5.ts # 第5类：安全防护 (31条)
 │   └── router/             # 路由配置
 ├── public/
 │   └── C类题库_extracted.csv # 题库数据
@@ -131,24 +138,30 @@ LY0001,1.1.1,MC2-0001,题目内容,AC,选项A,选项B,选项C,选项D
 
 ### 修改记忆口诀
 
-编辑 `src/services/memoryAidsContentBased.ts`：
+编辑对应的分类文件（如 `src/services/memoryAids/category1.ts`）：
 
 ```typescript
-{
-  questionPattern: /你的关键词/,
-  priority: 90,
-  generateAid: (question, correctAnswers) => {
-    return '你的记忆口诀'
-  }
+export const category1MemoryAids: Record<string, string> = {
+  'MC1-0001': '行政法规条例院军委',
+  'MC1-0002': '管理文件-管理办法工信部',
+  // 添加或修改记忆口诀
+  'MC1-0XXX': '你的新记忆口诀',
 }
+```
+
+验证更改：
+```bash
+node scripts/final-verification.js
 ```
 
 ## 📄 文档
 
 - [CLAUDE.md](CLAUDE.md) - 项目技术文档
 - [Vercel部署指南.md](Vercel部署指南.md) - 详细部署步骤
-- [记忆口诀优化总结.md](记忆口诀优化总结.md) - 口诀系统说明
 - [Remember.md](Remember.md) - 原版记忆口诀集合
+- **记忆口诀系统文档**:
+  - [使用指南](docs/memory-aids-usage-guide.md) - 完整使用说明
+  - [完成报告](docs/memory-aids-completion-report.md) - 系统实现细节
 
 ## 🎯 项目特点
 
@@ -159,22 +172,30 @@ LY0001,1.1.1,MC2-0001,题目内容,AC,选项A,选项B,选项C,选项D
 - ✅ 无需环境变量
 - ✅ 开箱即用
 
-### 记忆口诀系统 v2.0
+### 记忆口诀系统 v3.0
 
-**2025年优化**：
-- 删除了所有"答案关键词：..."无效口诀
-- 参考原版Remember.md风格，更简洁易记
-- 100%覆盖所有题目
-- 基于内容而非选项位置
+**2025-10-15 完整版**：
+- ✅ **1282条完整口诀** - 100%覆盖所有题目
+- ✅ **按题号精确映射** - 直接通过题目ID获取口诀
+- ✅ **分类组织** - 5个分类文件，便于维护和协作
+- ✅ **TypeScript类型安全** - 完整的类型定义
+- ✅ **自动集成** - dataService自动关联记忆口诀
 
-**示例对比**：
+**口诀特点**：
+- 简洁口语化（10-20字）
+- 抓住核心知识点
+- 数字强化记忆（如3w/5k、71.3）
+- 对比与谐音（如"天驻线行"、"扶贫乡=幅频相"）
+
+**示例**：
+```typescript
+'MC1-0003': '监管两级制，国家加省级'
+'MC1-0059': 'A类新手30到3000兆，最多25瓦'
+'MC2-0154': '擅用频率罚5万，拒不改正5到20（看到罚款选最大）'
+'MC1-0719': '天驻线行（天线驻波，馈线行波）'
 ```
-❌ 旧："A类频段：30-3000MHz，功率≤25瓦（VHF/UHF）"
-✅ 新："A类30-3000MHz，25瓦管VHF/UHF"
 
-❌ 旧："答案关键词：共基极放大器、共发射极放大器..."
-✅ 新："电路记：电压并，电流串"
-```
+详见 [使用指南](docs/memory-aids-usage-guide.md)
 
 ## 📊 题库统计
 
