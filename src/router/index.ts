@@ -17,6 +17,11 @@ const routes = [
     meta: { title: '学习模式' }
   },
   {
+    path: '/memory-handbook',
+    component: () => import('pages/MemoryHandbookPage.vue'),
+    meta: { title: '记忆手册' }
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   }

@@ -40,13 +40,21 @@
             </div>
           </q-card-section>
 
-          <q-card-actions align="center">
+          <q-card-actions align="center" class="q-gutter-md">
             <q-btn
               color="primary"
               size="lg"
               label="开始学习"
               icon="school"
               @click="goToCategories"
+            />
+            <q-btn
+              outline
+              color="secondary"
+              size="lg"
+              label="记忆手册"
+              icon="book"
+              @click="goToMemoryHandbook"
             />
           </q-card-actions>
         </q-card>
@@ -64,6 +72,15 @@
                 <q-item-section>
                   <q-item-label>智能记忆助手</q-item-label>
                   <q-item-label caption>基于题目特征自动匹配记忆口诀</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item>
+                <q-item-section avatar>
+                  <q-icon name="auto_stories" color="warning" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>记忆卡片集</q-item-label>
+                  <q-item-label caption>6大主题，30+张精心设计的记忆卡片</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item>
@@ -132,5 +149,9 @@ async function testAPI() {
 
 function goToCategories() {
   router.push('/categories')
+}
+
+function goToMemoryHandbook() {
+  router.push('/memory-handbook')
 }
 </script>
